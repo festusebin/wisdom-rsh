@@ -8,9 +8,12 @@ if (process.argv.length < 3 || ['seller', 'buyer'].includes(process.argv[2]) == 
 const role = process.argv[2];
 
 console.log(`Your role is ${role}`);
-
 const stdlib = loadStdlib(process.env);
 console.log(`The consensus network is ${stdlib.connector}.`);
+const suStr = stdlib.standardUnit;
+const auStr = stdlib.atomicUnit;
+console.log(`The standard unit is ${suStr}`);
+console.log(`The atomic unit is ${auStr}`);
 
 const commonInteract = {};
 

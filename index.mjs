@@ -18,12 +18,14 @@ const toSU = (au) => stdlib.formatCurrency(au, 4);
 const iBalance = toAU(1000);
 const showBalance = async (acc) => console.log(`Your balance is ${toSU(await stdlib.balanceOf(acc))} ${suStr}.`);
 
-const commonInteract = {};
+const commonInteract = (role) => ({
+  reportCancellation: () => { console.log(`${role == 'buyer' ? 'You' : 'The buyer'} cancelled the order.`); }
+});
 
 // Seller
 if (role === 'seller') {
   const sellerInteract = {
-    ...commonInteract,
+    ...commonInteract(role),
     price: toAU(5),
     reportReady: async (price) => {
       console.log(`Your wisdom is for sale at ${toSU(price)} ${suStr}.`);
@@ -40,7 +42,7 @@ if (role === 'seller') {
 // Buyer
 } else {
   const buyerInteract = {
-    ...commonInteract,
+    ...commonInteract(role),
     confirmPurchase: async (price) => await ask.ask(`Do you want to purchase wisdom for ${toSU(price)} ${suStr}?`, ask.yesno),
   };
   const acc = await stdlib.newTestAccount(iBalance);

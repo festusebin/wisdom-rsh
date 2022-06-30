@@ -1,5 +1,6 @@
 import { loadStdlib } from '@reach-sh/stdlib';
 import * as backend from './build/index.main.mjs';
+import { ask } from '@reach-sh/stdlib';
 
 if (process.argv.length < 3 || ['seller', 'buyer'].includes(process.argv[2]) == false) {
   console.log('Usage: reach run index [seller|buyer]');
@@ -36,12 +37,19 @@ if (role === 'seller') {
   await ctc.participants.Seller(sellerInteract);
   await showBalance(acc);
 
-  // Buyer
+// Buyer
 } else {
   const buyerInteract = {
     ...commonInteract,
+    confirmPurchase: async (price) => await ask.ask(`Do you want to purchase wisdom for ${toSU(price)} ${suStr}?`, ask.yesno),
   };
-
+  const acc = await stdlib.newTestAccount(iBalance);
+  const info = await ask.ask('Paste contract info:', (s) => JSON.parse(s));
+  const ctc = acc.contract(backend, info);
+  await showBalance(acc);
+  await ctc.p.Buyer(buyerInteract);
+  await showBalance(acc);
 };
 
+ask.done();
 

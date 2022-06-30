@@ -3,7 +3,10 @@
 const commonInteract = {};
 const sellerInteract = {
   ...commonInteract,
+    price: UInt,
+    reportReady: Fun([UInt], Null),
 };
+
 const buyerInteract = {
   ...commonInteract,
 };
@@ -11,7 +14,12 @@ const buyerInteract = {
 export const main = Reach.App(() => {
   const S = Participant('Seller', sellerInteract);
   const B = Participant('Buyer', buyerInteract);
-  init();
+    init();
+
+  S.only(() => { const price = declassify(interact.price); });
+  S.publish(price);
+  S.interact.reportReady(price);
+  commit();
 
   exit();
 
